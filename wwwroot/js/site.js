@@ -13,6 +13,27 @@ $("#json").change(async function () {
     }
 })
 
+$(document).ready(function () {
+    $("#download").click(function () {
+        window.jsPDF = window.jspdf.jsPDF
+        var content = $("#previewPDF")[0];
+        const contentWidth  = content.offsetWidth;
+
+        // Create a new jsPDF instance
+        const pdf = new jsPDF({
+            unit: "px",
+            format: [contentWidth , 792] // 792 is the height of A4 in pixels
+        });
+
+        pdf.html(content, {
+            callback: function (pdf) {
+                pdf.save("a4.pdf");
+            },
+            y: 20,
+        });
+    })
+})
+
 async function isArray(data) {
     const jsonData = JSON.parse(data);
 
@@ -75,17 +96,15 @@ async function generateTable(title, data) {
     }
 
     return `
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">${title}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tbody}
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">${title}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tbody}
+            </tbody>
+        </table>
     `;
 }
